@@ -1,17 +1,38 @@
 plugins {
     id("java")
+    // This plugin creates a task named "shadowJar".
+    // It puts/includes/shades/shadows (basically every previous word describes the same thing)
+    // all your dependencies marked with "implementation" into your final JAR file.
+    // JAR files created with shadow have the suffix "-all".
+    // So if you build this project with "shadowJar" the JAR file name will be:
+    // "hytale-plugin-template-1.0.0-all.jar"
     id("com.gradleup.shadow") version("9.3.1")
+    id("eu.koboo.pluginmanifest") version("1.0.24")
 }
 
-group = "REPLACE_WITH_YOUR_GROUP_ID"
-version = "REPLACE_WITH_YOUR_VERSION"
+group = "eu.koboo"
+version = "1.0.0"
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven {
+        name = "entixReposilite"
+        url = uri("https://repo.entix.eu/releases")
+    }
 }
 
 dependencies {
-    compileOnly(files("libs/HytaleServer-1.0.0.jar"))
+    // Here you can add your own dependencies.
+}
+
+pluginManifest {
+    // Here you can configure:
+    // 1. manifest.json generation properties
+    // 2. If and where your HytaleServer.jar is.
+    //
+    // For more information see GitHub:
+    // https://github.com/Koboo/hytale-pluginmanifest
 }
 
 java {
@@ -26,6 +47,7 @@ tasks {
     }
     javadoc {
         options.encoding = "UTF-8"
+        // Comment out this line to enable Javadoc warnings.
         (options as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
     }
 }
