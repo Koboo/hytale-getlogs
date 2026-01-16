@@ -2,11 +2,12 @@ package eu.koboo.myplugin;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-public class MyPlugin extends JavaPlugin {
+import javax.annotation.Nonnull;
 
-    public MyPlugin(@NonNullDecl JavaPluginInit init) {
+public class MyPlugin extends JavaPlugin{
+
+    public MyPlugin(@Nonnull JavaPluginInit init) {
         super(init);
     }
 
