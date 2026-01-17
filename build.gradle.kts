@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "eu.koboo"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenLocal()
@@ -23,6 +23,10 @@ dependencies {
 }
 
 pluginManifest {
+    manifestConfiguration {
+        pluginGroup = "Koboo"
+        pluginName = "GetLogs"
+    }
     runtimeConfiguration {
         serverRuntimePath = "D:/PluginManifestRuntime"
         authMode = AuthMode.AUTHENTICATED
