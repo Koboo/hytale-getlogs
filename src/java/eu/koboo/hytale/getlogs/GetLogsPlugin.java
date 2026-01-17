@@ -1,25 +1,24 @@
-package eu.koboo.myplugin;
+package eu.koboo.hytale.getlogs;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 import javax.annotation.Nonnull;
 
-public class MyPlugin extends JavaPlugin{
+public class GetLogsPlugin extends JavaPlugin{
 
-    public MyPlugin(@Nonnull JavaPluginInit init) {
+    public GetLogsPlugin(@Nonnull JavaPluginInit init) {
         super(init);
     }
 
     @Override
     protected void setup() {
-        getLogger().atInfo().log("MyPlugin was successfully started!");
+        getCommandRegistry().registerCommand(new GetLogsCommand(this));
         super.setup();
     }
 
     @Override
     protected void shutdown() {
-        getLogger().atInfo().log("MyPlugin was successfully shutdown!");
         super.shutdown();
     }
 }

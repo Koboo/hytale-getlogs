@@ -8,4 +8,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = "hytale-plugin-template"
+rootProject.name = "hytale-getlogs"
