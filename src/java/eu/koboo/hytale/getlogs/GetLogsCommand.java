@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -61,7 +60,6 @@ public class GetLogsCommand extends CommandBase {
             sender.sendMessage(Message.raw("Error: " + e.getMessage()));
             return;
         }
-        HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.pastes.dev/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(fileContent, StandardCharsets.UTF_8))
@@ -71,9 +69,7 @@ public class GetLogsCommand extends CommandBase {
 
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-            client.close();
-            client.shutdownNow();
+            response = plugin.client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (IOException | InterruptedException e) {
             sender.sendMessage(Message.raw("Error occurred while posting log file:"));
             sender.sendMessage(Message.raw("File: " + newestFile.getName()));
