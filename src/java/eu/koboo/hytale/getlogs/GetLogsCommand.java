@@ -28,17 +28,13 @@ public class GetLogsCommand extends CommandBase {
     private final GetLogsPlugin plugin;
 
     public GetLogsCommand(GetLogsPlugin plugin) {
-        super("getslogs", "Creates a paste-link with the latest log files content.");
+        super("getlogs", "Creates a paste-link with the latest log files content.");
         this.plugin = plugin;
     }
 
     @Override
     protected void executeSync(@Nonnull CommandContext commandContext) {
         CommandSender sender = commandContext.sender();
-        if (!sender.hasPermission("getlogs")) {
-            sender.sendMessage(Message.raw("You don't have permissions."));
-            return;
-        }
         File logDirectory = new File("logs/");
         if(!logDirectory.exists()) {
             sender.sendMessage(Message.raw("Directory \"logs/\" doesn't exist."));
