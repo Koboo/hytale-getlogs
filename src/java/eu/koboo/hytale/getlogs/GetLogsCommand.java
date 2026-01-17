@@ -18,11 +18,19 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
 
 public class GetLogsCommand extends CommandBase {
+
+    private static final String POST_URI = "https://api.pastes.dev/post";
+    private static final String PASTE_URI = "https://pastes.dev/";
+    private static final String CONTENT_TYPE = "text/log";
+    private static final String USER_AGENT = "Hytale-GetLogs (github.com/Koboo/hytale-getlogs)";
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final int SUCCESS_STATUS_CODE = 201;
 
     private final GetLogsPlugin plugin;
 
@@ -53,7 +61,7 @@ public class GetLogsCommand extends CommandBase {
         }
         String fileContent;
         try {
-            fileContent = Files.readString(newestFile.toPath(), StandardCharsets.UTF_8);
+            fileContent = Files.readString(newestFile.toPath(), CHARSET);
         } catch (IOException e) {
             sender.sendMessage(Message.raw("Error occurred while reading log file:"));
             sender.sendMessage(Message.raw("File: " + newestFile.getName()));
@@ -61,15 +69,15 @@ public class GetLogsCommand extends CommandBase {
             return;
         }
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.pastes.dev/post"))
-                .POST(HttpRequest.BodyPublishers.ofString(fileContent, StandardCharsets.UTF_8))
-                .header("Content-Type", "text/log")
-                .header("User-Agent", "Hytale-GetLogs (github.com/Koboo/hytale-getlogs)")
+                .uri(URI.create(POST_URI))
+                .POST(HttpRequest.BodyPublishers.ofString(fileContent, CHARSET))
+                .header("Content-Type", CONTENT_TYPE)
+                .header("User-Agent", USER_AGENT)
                 .build();
 
         HttpResponse<String> response;
         try {
-            response = plugin.client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            response = plugin.client.send(request, HttpResponse.BodyHandlers.ofString(CHARSET));
         } catch (IOException | InterruptedException e) {
             sender.sendMessage(Message.raw("Error occurred while posting log file:"));
             sender.sendMessage(Message.raw("File: " + newestFile.getName()));
@@ -77,7 +85,7 @@ public class GetLogsCommand extends CommandBase {
             return;
         }
         int statusCode = response.statusCode();
-        if (statusCode != 201) {
+        if (statusCode != SUCCESS_STATUS_CODE) {
             sender.sendMessage(Message.raw("Received invalid statusCode \"" + statusCode + "\" from paste."));
             return;
         }
@@ -86,8 +94,7 @@ public class GetLogsCommand extends CommandBase {
             sender.sendMessage(Message.raw("Couldn't decode paste response. No pasteKey in headers."));
             return;
         }
-        String pasteKey = optionalPasteKey.get();
-        String pasteUrl = "https://pastes.dev/" + pasteKey;
+        String pasteUrl = PASTE_URI + optionalPasteKey.get();
         sender.sendMessage(Message.raw("Paste-Link: " + pasteUrl));
         if(commandContext.isPlayer()) {
             World world = commandContext.senderAs(Player.class).getWorld();
